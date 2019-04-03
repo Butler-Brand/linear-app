@@ -26,6 +26,7 @@ class MatrixInput extends Component {
           maxLength="3"
           type="text"
           placeholder="0"
+          value={this.state.inputValue}
           onFocus={e => (e.target.placeholder = "")}
           onBlur={e => (e.target.placeholder = "0")}
           onChange={this.handleChange}
