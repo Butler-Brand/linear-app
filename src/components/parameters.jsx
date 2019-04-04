@@ -78,6 +78,7 @@ class Parameters extends Component {
               <option value="add">Add</option>
               <option value="subtract">Subtract</option>
               <option value="multiply">Multiply</option>
+              <option value="division">Division</option>
             </select>
           </div>
         </div>
@@ -98,6 +99,7 @@ class Parameters extends Component {
 
     //validation: stop operation if these are true
     if (this.state.operation === "add" || this.state.operation === "subtract") {
+      //ADDITION & SUBTRACTION: if adding or subtracting, both matricies must have same dimensions
       if (
         this.state.matrix1Rows != this.state.matrix2Rows ||
         this.state.matrix1Columns != this.state.matrix2Columns
@@ -105,7 +107,19 @@ class Parameters extends Component {
         this.setState({ error: true });
         return;
       }
+    } else if (this.state.operation === "division") {
+      //DIVISION: If mutiplying matricies, columns of the first matrix must have
+      //same number of columns as rows of the second, AND the second matrix
+      //must be a square matrix
+      if (
+        this.state.matrix1Columns != this.state.matrix2Rows ||
+        this.state.matrix2Columns != this.state.matrix2Rows
+      ) {
+        return;
+      }
     } else {
+      //MULTIPLICATION: If mutiplying matricies, columns of the first matrix must have
+      //same number of columns as rows of the second.
       if (this.state.matrix1Columns != this.state.matrix2Rows) {
         this.setState({ error: true });
         return;

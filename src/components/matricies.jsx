@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Matrix from "./matrix";
+import Calculator from "./calculator";
 
 class Matricies extends Component {
   state = {
@@ -85,6 +86,7 @@ class Matricies extends Component {
   operationString() {
     if (this.props.operation === "add") return "+";
     if (this.props.operation === "subtract") return "-";
+    if (this.props.operation === "division") return "÷";
 
     return "X";
   }
@@ -92,47 +94,45 @@ class Matricies extends Component {
   calculate() {
     if (this.props.operation === "add" || this.props.operation === "subtract") {
       this.addOrSubtract();
+    } else if (this.props.operation === "division") {
+      this.divide();
     } else {
       this.multiply();
     }
   }
 
   addOrSubtract() {
-    var calculatedMatrix = [];
-    for (var i = 0; i < this.props.matrix1Values.length; i++) {
-      calculatedMatrix.push([]); //new row
-      for (var j = 0; j < this.props.matrix1Values[i].length; j++) {
-        if (this.props.operation === "add") {
-          calculatedMatrix[i].push(
-            parseInt(this.props.matrix1Values[i][j]) +
-              parseInt(this.props.matrix2Values[i][j])
-          );
-        } else {
-          calculatedMatrix[i].push(
-            parseInt(this.props.matrix1Values[i][j]) -
-              parseInt(this.props.matrix2Values[i][j])
-          );
-        }
-      }
-    }
+    var newCalculator = new Calculator();
+    var calculatedMatrix = newCalculator.addOrSubtract(
+      this.props.matrix1Values,
+      this.props.matrix2Values,
+      this.props.operation
+    );
+
     this.setState({ showResult: true, matrix3Values: calculatedMatrix });
   }
 
   multiply() {
-    var calculatedMatrix = [];
-    var entryAnswer = 0;
-    for (var i = 0; i < this.props.matrix1Values.length; i++) {
-      calculatedMatrix.push([]); //new row
-      for (var j = 0; j < this.props.matrix2Values[0].length; j++) {
-        for (var k = 0; k < this.props.matrix2Values.length; k++) {
-          entryAnswer +=
-            parseInt(this.props.matrix1Values[i][k]) *
-            parseInt(this.props.matrix2Values[k][j]);
-        }
-        calculatedMatrix[i].push(entryAnswer);
-        entryAnswer = 0;
-      }
+    var newCalculator = new Calculator();
+    var calculatedMatrix = newCalculator.multiply(
+      this.props.matrix1Values,
+      this.props.matrix2Values
+    );
+    this.setState({ showResult: true, matrix3Values: calculatedMatrix });
+  }
+
+  divide() {
+    var newCalculator = new Calculator();
+    var calculatedMatrix = newCalculator.divide(
+      this.props.matrix1Values,
+      this.props.matrix2Values
+    );
+
+    if (calculatedMatrix === false) {
+      //figure out what happens in a 0-case matrix (possible in division)
+      return;
     }
+
     this.setState({ showResult: true, matrix3Values: calculatedMatrix });
   }
 
